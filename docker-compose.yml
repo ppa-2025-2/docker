@@ -1,0 +1,35 @@
+services:
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    environment:
+      - SERVICES=s3
+      - AWS_ACCESS_KEY=test
+      - AWS_SECRET_ACCCESS_KEY=test
+      - DEFAULT_REGION=us-east-1
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    networks:
+      - development-network
+
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: pass
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - development-network
+
+volumes:
+  rabbitmq_data:
+
+networks:
+  development-network:
+    driver: bridge
